@@ -154,6 +154,43 @@
             .main-title { font-size: 2rem; }
             .submit-button { width: 100%; }
         }
+
+        /* FAQ Styles */
+        .faq-section {
+          margin: 60px auto;
+          padding: 30px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid var(--glass-border);
+          border-radius: var(--border-radius);
+          backdrop-filter: blur(12px);
+        }
+        .faq-title {
+          text-align: center;
+          font-size: 2rem;
+          font-weight: 700;
+          margin-bottom: 25px;
+          color: var(--text-primary);
+        }
+        .faq-item { border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+        .faq-question {
+          padding: 15px;
+          cursor: pointer;
+          font-weight: 600;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: var(--text-primary);
+        }
+        .faq-answer {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s ease, padding 0.3s ease;
+          padding: 0 15px;
+          color: var(--text-secondary);
+        }
+        .faq-item.active .faq-answer { max-height: 200px; padding: 15px; }
+        .faq-icon { transition: transform 0.3s ease; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
     </style>
 </head>
 <body>
@@ -189,6 +226,10 @@
                             <option value="سيسكو">🌐 سيسكو</option>
                             <option value="بوربوينت">📊 عرض بوربوينت</option>
                             <option value="وورد">📄 مستند وورد</option>
+                            <option value="خرائط مفاهيم"> 📜خرائط مفاهيم</option>
+                             <option value="ترجمة ملفات"> 💫ترجمة ملفات</option>
+                             <option value="cv "> 🗞️ cv </option>
+                            <option value="طلب اخر">طلب اخر </option>
                         </select>
                     </div>
                     <div class="field-hint"><i class="fas fa-info-circle"></i> اختر النوع الذي يناسب مشروعك الأكاديمي</div>
@@ -287,9 +328,10 @@
         </div>
     </div>
 
+    <!-- سكربت النموذج + واتساب -->
     <script>
-        // إعدادات الواتساب - ضع هنا رقم الواتساب الخاص بك
-        const WHATSAPP_NUMBER = '966545047727'; // غيّر هذا الرقم إلى رقمك
+        // إعدادات الواتساب - ضع هنا رقم الواتساب الخاص بك (بدون +)
+        const WHATSAPP_NUMBER = '966504600487'; // غيّر هذا الرقم إلى رقمك
 
         let currentStep = 1;
         const stepsEls = document.querySelectorAll('.progress-step');
@@ -340,23 +382,15 @@
             message += `📱 الهاتف: ${data.phone}\n`;
             message += `📁 نوع المشروع: ${data.projectType}\n`;
             
-            if (data.slidesCount) {
-                message += `📊 عدد الشرائح: ${data.slidesCount}\n`;
-            }
-            if (data.presentationType) {
-                message += `🎨 مستوى التصميم: ${data.presentationType}\n`;
-            }
-            if (data.wordPages) {
-                message += `📄 عدد الصفحات: ${data.wordPages}\n`;
-            }
-            if (data.details) {
-                message += `\n📝 التفاصيل:\n${data.details}\n`;
-            }
-            
+            if (data.slidesCount) message += `📊 عدد الشرائح: ${data.slidesCount}\n`;
+            if (data.presentationType) message += `🎨 مستوى التصميم: ${data.presentationType}\n`;
+            if (data.wordPages) message += `📄 عدد الصفحات: ${data.wordPages}\n`;
+            if (data.details) message += `\n📝 التفاصيل:\n${data.details}\n`;
             message += `\n⏰ وقت الطلب: ${new Date().toLocaleString('ar-SA')}`;
-            
+
             const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+            // فتح في نفس التبويب لضمان عدم حظر بعض المتصفحات
+            window.location.href = whatsappUrl;
         }
 
         // تبديل الحقول حسب نوع المشروع
@@ -425,7 +459,6 @@
             if (v.length >= 2 && v.slice(0,2) !== '05') v = '05' + v.slice(2);
             e.target.value = v;
 
-            // تحديث شريط التقدم عند صلاحية الرقم
             const valid = /^05\d{8}$/.test(v);
             if (valid) { 
                 currentStep = 5; 
@@ -489,9 +522,7 @@
                 const response = await fetch(form.action, {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
 
                 loadingOverlay.style.display = 'none';
@@ -521,13 +552,10 @@
                     currentStep = 1; 
                     updateProgress(currentStep);
 
-                    // إرسال تلقائي للواتساب بعد 3 ثوانِ
-                    setTimeout(() => {
-                        sendToWhatsApp(data);
-                    }, 3000);
+                    // (اختياري) إرسال تلقائي للواتساب بعد 3 ثواني — قد يُحظر ببعض المتصفحات
+                    // setTimeout(() => { sendToWhatsApp(data); }, 3000);
 
                 } else {
-                    const errorData = await response.json().catch(() => ({}));
                     showMessage('error', 'حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.');
                 }
             } catch (error) {
@@ -537,6 +565,65 @@
         });
 
     </script>
+
+    <!-- 🟣 قسم الأسئلة الشائعة -->
+    <section class="faq-section">
+      <h2 class="faq-title">الأسئلة الشائعة</h2>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>⏰ كم يستغرق تسليم المشروع؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          عادة من 2 إلى 5 أيام حسب حجم المشروع ونوع الخدمة.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>🔒 كيف أضمن جودة العمل؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          جميع المشاريع يتم مراجعتها بعناية مع إمكانية طلب تعديلات مجانية محدودة.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>💳 ما طرق الدفع المتاحة؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+           تحويل بنكي .
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>⚡ هل يمكنني طلب مشروع مستعجل؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          نعم، يمكنك اختيار خيار "تسليم عاجل" برسوم إضافية.
+        </div>
+      </div>
+    </section>
+
+    <!-- سكربت الـ FAQ (سؤال واحد مفتوح في كل مرة) -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.faq-question').forEach(q => {
+          q.addEventListener('click', () => {
+            document.querySelectorAll('.faq-item').forEach(item => {
+              if (item !== q.parentElement) { item.classList.remove('active'); }
+            });
+            q.parentElement.classList.toggle('active');
+          });
+        });
+      });
+    </script>
+
 </body>
 </html>
-
