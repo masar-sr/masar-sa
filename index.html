@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Cairo', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #006C35, #128C4A);
+      background: linear-gradient(135deg, #1E3C72, #2A5298);
       color: white;
       display: flex;
       flex-direction: column;
@@ -16,6 +16,7 @@
       height: 100vh;
       margin: 0;
       text-align: center;
+      overflow: hidden;
     }
     h1 {
       font-size: 3rem;
@@ -38,11 +39,63 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* زر الواتساب */
+    .whatsapp {
+      margin-top: 2rem;
+      background: #25D366;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .whatsapp:hover {
+      background: #1EBE5B;
+    }
+
+    /* الموجات */
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 200px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1000% 1000% 0 0;
+      animation: wave 8s linear infinite;
+      transform: translateX(-25%);
+    }
+    .wave:nth-of-type(2) {
+      bottom: 10px;
+      animation: wave 10s linear infinite;
+      opacity: 0.5;
+    }
+    .wave:nth-of-type(3) {
+      bottom: 20px;
+      animation: wave 12s linear infinite;
+      opacity: 0.3;
+    }
+    @keyframes wave {
+      0% { transform: translateX(-25%); }
+      50% { transform: translateX(0%); }
+      100% { transform: translateX(-25%); }
+    }
   </style>
 </head>
 <body>
   <h1>🚧 الموقع تحت الصيانة</h1>
   <p>نعود لكم قريبًا بإذن الله ✨</p>
   <div class="loader"></div>
+
+  <!-- رابط واتساب للتواصل -->
+  <a href="https://wa.me/966504600487" target="_blank" class="whatsapp">تواصل معنا عبر الواتساب</a>
+
+  <!-- أمواج -->
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
 </body>
 </html>
