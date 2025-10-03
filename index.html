@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> طلبات مسار - طلب مشروعك</title>
+    <title data-i18n="page_title">طلبات مسار - طلب مشروعك</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
@@ -28,24 +28,33 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: var(--primary-gradient); background-size: 400% 400%;
-            background-attachment: fixed; animation: gradient-shift 20s ease infinite;
+            background: var(--primary-gradient);
+            background-size: 400% 400%;
+            background-attachment: fixed;
+            animation: gradient-shift 20s ease infinite;
             min-height: 100vh; padding: 20px; position: relative; overflow-x: hidden;
         }
         body::before { content: ''; position: fixed; inset: 0; z-index: -2;
-            background: 
+            background:
                 radial-gradient(circle at 20% 30%, rgba(79, 195, 247, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(171, 71, 188, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 40% 90%, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
             animation: float-orbs 25s ease-in-out infinite;
         }
-        body::after { content: ''; position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; z-index: -1;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%23ffffff' fill-opacity='0.08'/%3E%3C/path%3E%3C/svg%3E");
-            background-size: cover; background-repeat: no-repeat; animation: wave-motion 15s ease-in-out infinite;
+        /* ✅ خلفية مموجة SVG متحركة */
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 0; left: 0;
+            width: 100%; height: 300px;
+            z-index: -1;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.08' d='M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,245.3C672,267,768,277,864,272C960,267,1056,245,1152,229.3C1248,213,1344,203,1392,197.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+            animation: wave-motion 12s ease-in-out infinite;
         }
 
         .container { max-width: 900px; margin: 0 auto; position: relative; }
-
         .header { text-align: center; margin-bottom: 40px; padding: 40px 0; }
 
         .logo-section { margin-bottom: 30px; }
@@ -191,15 +200,34 @@
         .faq-item.active .faq-answer { max-height: 200px; padding: 15px; }
         .faq-icon { transition: transform 0.3s ease; }
         .faq-item.active .faq-icon { transform: rotate(180deg); }
+
+        /* Language switch */
+        .lang-switch {
+          position: fixed; top: 12px; right: 12px; z-index: 1001;
+          display: flex; gap: 8px;
+        }
+        .lang-btn {
+          padding: 6px 12px; border: 1px solid var(--glass-border);
+          background: rgba(255,255,255,0.08); color: #fff;
+          border-radius: 10px; cursor: pointer; font-weight: 700;
+          backdrop-filter: blur(10px);
+        }
+        .lang-btn.active { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); }
     </style>
 </head>
 <body>
+    <!-- أزرار اللغة -->
+    <div class="lang-switch" aria-label="Language switch">
+      <button class="lang-btn active" data-lang="ar">العربية</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="logo-section">
                 <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
-                <h1 class="main-title"> طلبات مسار</h1>
-                <p class="subtitle">خدمات أكاديمية احترافية مع ضمان الجودة والسرعة في التسليم</p>
+                <h1 class="main-title" data-i18n="site_title">طلبات مسار</h1>
+                <p class="subtitle" data-i18n="site_subtitle">خدمات أكاديمية احترافية مع ضمان الجودة والسرعة في التسليم</p>
             </div>
         </div>
 
@@ -217,93 +245,84 @@
             <form id="projectForm" action="https://formspree.io/f/myzngjkp" method="POST" novalidate>
                 <!-- نوع المشروع -->
                 <div class="form-section">
-                    <label class="form-label"><i class="fas fa-folder-open"></i> نوع المشروع <span class="required-star">*</span></label>
+                    <label class="form-label" data-i18n-html="label_project_type">
+                      <i class="fas fa-folder-open"></i> نوع المشروع <span class="required-star">*</span>
+                    </label>
                     <div class="input-wrapper">
-                        <select id="projectType" name="project_type" class="form-select" required>
-                            <option value="">اختر نوع المشروع المطلوب</option>
-                            <option value="واجب">📝 واجب أكاديمي</option>
-                            <option value="بحث">🔍 بحث علمي</option>
-                            <option value="سيسكو">🌐 سيسكو</option>
-                            <option value="بوربوينت">📊 عرض بوربوينت</option>
-                            <option value="وورد">📄 مستند وورد</option>
-                            <option value="خرائط مفاهيم"> 📜خرائط مفاهيم</option>
-                             <option value="ترجمة ملفات"> 💫ترجمة ملفات</option>
-                             <option value="cv "> 🗞️ cv </option>
-                            <option value="طلب اخر">طلب اخر </option>
-                        </select>
+                        <select id="projectType" name="project_type" class="form-select" required></select>
                     </div>
-                    <div class="field-hint"><i class="fas fa-info-circle"></i> اختر النوع الذي يناسب مشروعك الأكاديمي</div>
+                    <div class="field-hint" data-i18n-html="hint_project_type">
+                      <i class="fas fa-info-circle"></i> اختر النوع الذي يناسب مشروعك الأكاديمي
+                    </div>
                 </div>
 
                 <!-- عدد الشرائح لبوربوينت -->
                 <div class="form-section dynamic-field" id="slidesGroup">
-                    <label class="form-label"><i class="fas fa-chart-bar"></i> عدد الشرائح <span class="required-star">*</span></label>
+                    <label class="form-label" data-i18n-html="label_slides">
+                      <i class="fas fa-chart-bar"></i> عدد الشرائح <span class="required-star">*</span>
+                    </label>
                     <div class="input-wrapper">
-                        <select id="slidesCount" name="slides_count" class="form-select">
-                            <option value="">حدد عدد الشرائح المطلوبة</option>
-                            <option value="5-10">5-10 شرائح</option>
-                            <option value="11-15">11-15 شريحة</option>
-                            <option value="16-20">16-20 شريحة</option>
-                            <option value="21-30">21-30 شريحة</option>
-                            <option value="أكثر من 30">أكثر من 30 شريحة</option>
-                            <option value="حسب المحتوى">حسب المحتوى المطلوب</option>
-                        </select>
+                        <select id="slidesCount" name="slides_count" class="form-select"></select>
                     </div>
                 </div>
 
                 <!-- مستوى التصميم بعد اختيار عدد الشرائح -->
                 <div class="form-section dynamic-field" id="presentationTypeGroup">
-                    <label class="form-label"><i class="fas fa-star"></i> مستوى التصميم <span class="required-star">*</span></label>
+                    <label class="form-label" data-i18n-html="label_design">
+                      <i class="fas fa-star"></i> مستوى التصميم <span class="required-star">*</span>
+                    </label>
                     <div class="input-wrapper">
-                        <select id="presentationType" name="presentation_type" class="form-select">
-                            <option value="">اختر مستوى التصميم</option>
-                            <option value="أساسي">🟢 أساسي - تصميم بسيط وواضح</option>
-                            <option value="احترافي">⭐ احترافي - تصميم متقدم ومتطور</option>
-                        </select>
+                        <select id="presentationType" name="presentation_type" class="form-select"></select>
                     </div>
-                    <div class="field-hint"><i class="fas fa-palette"></i> التصميم الاحترافي يشمل رسوم بيانية متقدمة وتأثيرات بصرية</div>
+                    <div class="field-hint" data-i18n-html="hint_design">
+                      <i class="fas fa-palette"></i> التصميم الاحترافي يشمل رسوم بيانية متقدمة وتأثيرات بصرية
+                    </div>
                 </div>
 
                 <!-- عدد صفحات الوورد -->
                 <div class="form-section dynamic-field" id="wordPagesGroup">
-                    <label class="form-label"><i class="fas fa-file-word"></i> عدد الصفحات <span class="required-star">*</span></label>
+                    <label class="form-label" data-i18n-html="label_word_pages">
+                      <i class="fas fa-file-word"></i> عدد الصفحات <span class="required-star">*</span>
+                    </label>
                     <div class="input-wrapper">
-                        <select id="wordPages" name="word_pages" class="form-select">
-                            <option value="">حدد عدد الصفحات المطلوبة</option>
-                            <option value="1-5">1-5 صفحات</option>
-                            <option value="6-10">6-10 صفحات</option>
-                            <option value="11-20">11-20 صفحة</option>
-                            <option value="21-30">21-30 صفحة</option>
-                            <option value="أكثر من 30">أكثر من 30 صفحة</option>
-                            <option value="حسب المحتوى">حسب المحتوى المطلوب</option>
-                        </select>
+                        <select id="wordPages" name="word_pages" class="form-select"></select>
                     </div>
                 </div>
 
                 <!-- الاسم -->
                 <div class="form-section">
-                    <label class="form-label"><i class="fas fa-user"></i> الاسم الكامل <span class="required-star">*</span></label>
+                    <label class="form-label" data-i18n-html="label_name">
+                      <i class="fas fa-user"></i> الاسم الكامل <span class="required-star">*</span>
+                    </label>
                     <div class="input-wrapper">
-                        <input type="text" id="name" name="name" class="form-input" placeholder="أدخل اسمك الكامل" required />
+                        <input type="text" id="name" name="name" class="form-input" placeholder="أدخل اسمك الكامل" data-i18n-placeholder="ph_name" required />
                     </div>
                 </div>
 
                 <!-- الهاتف -->
                 <div class="form-section">
-                    <label class="form-label"><i class="fas fa-mobile-alt"></i> رقم التواصل <span class="required-star">*</span></label>
+                    <label class="form-label" data-i18n-html="label_phone">
+                      <i class="fas fa-mobile-alt"></i> رقم التواصل <span class="required-star">*</span>
+                    </label>
                     <div class="input-wrapper">
-                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="05xxxxxxxx" inputmode="numeric" pattern="05\d{8}" required />
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="05xxxxxxxx" data-i18n-placeholder="ph_phone" inputmode="numeric" pattern="05\d{8}" required />
                     </div>
-                    <div class="field-hint"><i class="fas fa-shield-alt"></i> رقمك محمي ولن يستخدم إلا للتواصل بخصوص المشروع</div>
+                    <div class="field-hint" data-i18n-html="hint_phone">
+                      <i class="fas fa-shield-alt"></i> رقمك محمي ولن يستخدم إلا للتواصل بخصوص المشروع
+                    </div>
                 </div>
 
                 <!-- التفاصيل -->
                 <div class="form-section">
-                    <label class="form-label"><i class="fas fa-clipboard-list"></i> تفاصيل الطلب</label>
+                    <label class="form-label" data-i18n-html="label_details">
+                      <i class="fas fa-clipboard-list"></i> تفاصيل الطلب
+                    </label>
                     <div class="input-wrapper">
-                        <textarea id="details" name="details" class="form-textarea" placeholder=" تفاصيل المشروع مثل:&#10;- الموضوع المطلوب&#10;- عدد الصفحات أو الشرائح&#10;- تاريخ التسليم المطلوب&#10;- أي متطلبات خاص"></textarea>
+                        <textarea id="details" name="details" class="form-textarea" data-i18n-placeholder="ph_details" placeholder=" تفاصيل المشروع مثل:&#10;- الموضوع المطلوب&#10;- عدد الصفحات أو الشرائح&#10;- تاريخ التسليم المطلوب&#10;- أي متطلبات خاص"></textarea>
                     </div>
-                    <div class="field-hint"><i class="fas fa-lightbulb"></i> التفاصيل الواضحة تساعدنا في تقديم أفضل خدمة</div>
+                    <div class="field-hint" data-i18n-html="hint_details">
+                      <i class="fas fa-lightbulb"></i> التفاصيل الواضحة تساعدنا في تقديم أفضل خدمة
+                    </div>
                 </div>
 
                 <!-- حقول مخفية لـ Formspree -->
@@ -312,7 +331,7 @@
                 <input type="hidden" name="_format" value="plain" />
                 
                 <div class="submit-section">
-                    <button type="submit" class="submit-button" id="submitBtn">
+                    <button type="submit" class="submit-button" id="submitBtn" data-i18n-html="btn_submit">
                         <i class="fas fa-rocket" style="margin-left:10px"></i> إرسال الطلب
                     </button>
                 </div>
@@ -323,17 +342,277 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
             <div class="spinner"></div>
-            <div class="loading-text">جاري معالجة طلبك...</div>
+            <div class="loading-text" data-i18n="loading_text">جاري معالجة طلبك...</div>
             <div class="loading-progress"><div class="loading-bar"></div></div>
         </div>
     </div>
 
-    <!-- سكربت النموذج + واتساب -->
-    <script>
-        // إعدادات الواتساب - ضع هنا رقم الواتساب الخاص بك (بدون +)
-        const WHATSAPP_NUMBER = '966504600487'; // غيّر هذا الرقم إلى رقمك
+    <!-- 🟣 قسم الأسئلة الشائعة -->
+    <section class="faq-section">
+      <h2 class="faq-title" data-i18n="faq_title">الأسئلة الشائعة</h2>
 
-        let currentStep = 1;
+      <div class="faq-item">
+        <div class="faq-question">
+          <span data-i18n="faq_q1">⏰ كم يستغرق تسليم المشروع؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer" data-i18n="faq_a1">
+          عادة من 2 إلى 5 أيام حسب حجم المشروع ونوع الخدمة.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span data-i18n="faq_q2">🔒 كيف أضمن جودة العمل؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer" data-i18n="faq_a2">
+          جميع المشاريع يتم مراجعتها بعناية مع إمكانية طلب تعديلات مجانية محدودة.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span data-i18n="faq_q3">💳 ما طرق الدفع المتاحة؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer" data-i18n="faq_a3">
+           تحويل بنكي .
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span data-i18n="faq_q4">⚡ هل يمكنني طلب مشروع مستعجل؟</span>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer" data-i18n="faq_a4">
+          نعم، يمكنك اختيار خيار "تسليم عاجل" برسوم إضافية.
+        </div>
+      </div>
+    </section>
+
+    <!-- سكربت الـ FAQ -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.faq-question').forEach(q => {
+          q.addEventListener('click', () => {
+            document.querySelectorAll('.faq-item').forEach(item => {
+              if (item !== q.parentElement) { item.classList.remove('active'); }
+            });
+            q.parentElement.classList.toggle('active');
+          });
+        });
+      });
+    </script>
+
+    <!-- سكربت الترجمة + النموذج + واتساب -->
+    <script>
+        // ===== WhatsApp =====
+        const WHATSAPP_NUMBER = '966504600487'; // بدون +
+
+        // ===== i18n dict =====
+        const T = {
+          ar: {
+            page_title: "طلبات مسار - طلب مشروعك",
+            site_title: "طلبات مسار",
+            site_subtitle: "خدمات أكاديمية احترافية مع ضمان الجودة والسرعة في التسليم",
+
+            label_project_type: "<i class='fas fa-folder-open'></i> نوع المشروع <span class='required-star'>*</span>",
+            hint_project_type: "<i class='fas fa-info-circle'></i> اختر النوع الذي يناسب مشروعك الأكاديمي",
+
+            label_slides: "<i class='fas fa-chart-bar'></i> عدد الشرائح <span class='required-star'>*</span>",
+            label_design: "<i class='fas fa-star'></i> مستوى التصميم <span class='required-star'>*</span>",
+            hint_design: "<i class='fas fa-palette'></i> التصميم الاحترافي يشمل رسوم بيانية متقدمة وتأثيرات بصرية",
+
+            label_word_pages: "<i class='fas fa-file-word'></i> عدد الصفحات <span class='required-star'>*</span>",
+
+            label_name: "<i class='fas fa-user'></i> الاسم الكامل <span class='required-star'>*</span>",
+            label_phone: "<i class='fas fa-mobile-alt'></i> رقم التواصل <span class='required-star'>*</span>",
+            label_details: "<i class='fas fa-clipboard-list'></i> تفاصيل الطلب",
+
+            hint_phone: "<i class='fas fa-shield-alt'></i> رقمك محمي ولن يستخدم إلا للتواصل بخصوص المشروع",
+            hint_details: "<i class='fas fa-lightbulb'></i> التفاصيل الواضحة تساعدنا في تقديم أفضل خدمة",
+
+            ph_name: "أدخل اسمك الكامل",
+            ph_phone: "05xxxxxxxx",
+            ph_details: " تفاصيل المشروع مثل:\n- الموضوع المطلوب\n- عدد الصفحات أو الشرائح\n- تاريخ التسليم المطلوب\n- أي متطلبات خاص",
+
+            btn_submit: "<i class='fas fa-rocket' style='margin-left:10px'></i> إرسال الطلب",
+            loading_text: "جاري معالجة طلبك...",
+
+            faq_title: "الأسئلة الشائعة",
+            faq_q1: "⏰ كم يستغرق تسليم المشروع؟",
+            faq_a1: "عادة من 2 إلى 5 أيام حسب حجم المشروع ونوع الخدمة.",
+            faq_q2: "🔒 كيف أضمن جودة العمل؟",
+            faq_a2: "جميع المشاريع يتم مراجعتها بعناية مع إمكانية طلب تعديلات مجانية محدودة.",
+            faq_q3: "💳 ما طرق الدفع المتاحة؟",
+            faq_a3: "تحويل بنكي .",
+            faq_q4: "⚡ هل يمكنني طلب مشروع مستعجل؟",
+            faq_a4: "نعم، يمكنك اختيار خيار \"تسليم عاجل\" برسوم إضافية.",
+
+            // Options
+            project_type_options: [
+              { value:"", text:"اختر نوع المشروع المطلوب" },
+              { value:"واجب", text:"📝 واجب أكاديمي" },
+              { value:"بحث", text:"🔍 بحث علمي" },
+              { value:"سيسكو", text:"🌐 سيسكو" },
+              { value:"بوربوينت", text:"📊 عرض بوربوينت" },
+              { value:"وورد", text:"📄 مستند وورد" },
+              { value:"خرائط مفاهيم", text:"📜خرائط مفاهيم" },
+              { value:"ترجمة ملفات", text:"💫ترجمة ملفات" },
+              { value:"cv ", text:"🗞️ cv " },
+              { value:"طلب اخر", text:"طلب اخر " }
+            ],
+            slides_options: [
+              {value:"", text:"حدد عدد الشرائح المطلوبة"},
+              {value:"5-10", text:"5-10 شرائح"},
+              {value:"11-15", text:"11-15 شريحة"},
+              {value:"16-20", text:"16-20 شريحة"},
+              {value:"21-30", text:"21-30 شريحة"},
+              {value:"أكثر من 30", text:"أكثر من 30 شريحة"},
+              {value:"حسب المحتوى", text:"حسب المحتوى المطلوب"},
+            ],
+            design_options: [
+              {value:"", text:"اختر مستوى التصميم"},
+              {value:"أساسي", text:"🟢 أساسي - تصميم بسيط وواضح"},
+              {value:"احترافي", text:"⭐ احترافي - تصميم متقدم ومتطور"},
+            ],
+            word_pages_options: [
+              {value:"", text:"حدد عدد الصفحات المطلوبة"},
+              {value:"1-5", text:"1-5 صفحات"},
+              {value:"6-10", text:"6-10 صفحات"},
+              {value:"11-20", text:"11-20 صفحة"},
+              {value:"21-30", text:"21-30 صفحة"},
+              {value:"أكثر من 30", text:"أكثر من 30 صفحة"},
+              {value:"حسب المحتوى", text:"حسب المحتوى المطلوب"},
+            ],
+
+            // Messages
+            msg_choose_type: "فضلاً اختر نوع المشروع.",
+            msg_ppt_slides: "حدد عدد الشرائح لعرض البوربوينت.",
+            msg_choose_design: "اختر مستوى التصميم (أساسي/احترافي).",
+            msg_word_pages: "حدد عدد صفحات مستند الوورد.",
+            msg_name: "اكتب اسمك الكامل.",
+            msg_phone: "رقم الجوال غير صحيح. يجب أن يكون 10 أرقام ويبدأ بـ 05.",
+            success_sent_email: "تم إرسال طلبك بنجاح إلى الإيميل ✅",
+            your_request_id: "رقم طلبك",
+            also_whatsapp: "إرسال إلى الواتساب أيضاً",
+            error_send: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.",
+            error_network: "حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.",
+
+            // WhatsApp
+            wa_title: "🎓 طلب مشروع جديد من طلبات مسار",
+            wa_name: "👤 الاسم",
+            wa_phone: "📱 الهاتف",
+            wa_type: "📁 نوع المشروع",
+            wa_slides: "📊 عدد الشرائح",
+            wa_design: "🎨 مستوى التصميم",
+            wa_pages: "📄 عدد الصفحات",
+            wa_details: "📝 التفاصيل",
+            wa_time: "⏰ وقت الطلب"
+          },
+          en: {
+            page_title: "Masar Orders - Request Your Project",
+            site_title: "Masar Orders",
+            site_subtitle: "Professional academic services with guaranteed quality and fast delivery",
+
+            label_project_type: "<i class='fas fa-folder-open'></i> Project Type <span class='required-star'>*</span>",
+            hint_project_type: "<i class='fas fa-info-circle'></i> Choose the type that fits your academic project",
+
+            label_slides: "<i class='fas fa-chart-bar'></i> Slides Count <span class='required-star'>*</span>",
+            label_design: "<i class='fas fa-star'></i> Design Level <span class='required-star'>*</span>",
+            hint_design: "<i class='fas fa-palette'></i> Pro design includes advanced charts and visual effects",
+
+            label_word_pages: "<i class='fas fa-file-word'></i> Pages <span class='required-star'>*</span>",
+
+            label_name: "<i class='fas fa-user'></i> Full Name <span class='required-star'>*</span>",
+            label_phone: "<i class='fas fa-mobile-alt'></i> Phone Number <span class='required-star'>*</span>",
+            label_details: "<i class='fas fa-clipboard-list'></i> Order Details",
+
+            hint_phone: "<i class='fas fa-shield-alt'></i> Your number is private and used only for this order",
+            hint_details: "<i class='fas fa-lightbulb'></i> Clear details help us deliver the best service",
+
+            ph_name: "Enter your full name",
+            ph_phone: "05xxxxxxxx",
+            ph_details: " Project details, e.g.:\n- Topic\n- Pages or slides\n- Due date\n- Special requirements",
+
+            btn_submit: "<i class='fas fa-rocket' style='margin-left:10px'></i> Send Request",
+            loading_text: "Processing your request...",
+
+            faq_title: "FAQ",
+            faq_q1: "⏰ How long does delivery take?",
+            faq_a1: "Usually 2 to 5 days depending on the project size and service type.",
+            faq_q2: "🔒 How do I ensure quality?",
+            faq_a2: "All projects are carefully reviewed with limited free revisions.",
+            faq_q3: "💳 What payment methods are available?",
+            faq_a3: "Bank transfer for now.",
+            faq_q4: "⚡ Can I request an urgent order?",
+            faq_a4: "Yes, an urgent option is available for an extra fee.",
+
+            project_type_options: [
+              { value:"", text:"Select a project type" },
+              { value:"واجب", text:"📝 Academic Assignment" },
+              { value:"بحث", text:"🔍 Research Paper" },
+              { value:"سيسكو", text:"🌐 Cisco" },
+              { value:"بوربوينت", text:"📊 PowerPoint" },
+              { value:"وورد", text:"📄 Word Document" },
+              { value:"خرائط مفاهيم", text:"📜 Mind Map" },
+              { value:"ترجمة ملفات", text:"💫 File Translation" },
+              { value:"cv ", text:"🗞️ CV" },
+              { value:"طلب اخر", text:"Other" }
+            ],
+            slides_options: [
+              {value:"", text:"Select number of slides"},
+              {value:"5-10", text:"5-10 slides"},
+              {value:"11-15", text:"11-15 slides"},
+              {value:"16-20", text:"16-20 slides"},
+              {value:"21-30", text:"21-30 slides"},
+              {value:"أكثر من 30", text:"More than 30"},
+              {value:"حسب المحتوى", text:"Depends on content"},
+            ],
+            design_options: [
+              {value:"", text:"Select design level"},
+              {value:"أساسي", text:"🟢 Basic — Simple"},
+              {value:"احترافي", text:"⭐ Pro — Advanced"},
+            ],
+            word_pages_options: [
+              {value:"", text:"Select number of pages"},
+              {value:"1-5", text:"1-5 pages"},
+              {value:"6-10", text:"6-10 pages"},
+              {value:"11-20", text:"11-20 pages"},
+              {value:"21-30", text:"21-30 pages"},
+              {value:"أكثر من 30", text:"More than 30"},
+              {value:"حسب المحتوى", text:"Depends on content"},
+            ],
+
+            msg_choose_type: "Please choose a project type.",
+            msg_ppt_slides: "Select the number of slides for PowerPoint.",
+            msg_choose_design: "Choose a design level (Basic/Pro).",
+            msg_word_pages: "Select the number of pages for Word.",
+            msg_name: "Please enter your full name.",
+            msg_phone: "Invalid phone. Must be 10 digits starting with 05.",
+            success_sent_email: "Your order has been sent to email ✅",
+            your_request_id: "Your Request ID",
+            also_whatsapp: "Send to WhatsApp too",
+            error_send: "An error occurred while sending. Please try again or contact us directly.",
+            error_network: "Network error. Check your connection and try again.",
+
+            wa_title: "🎓 New order from Masar Orders",
+            wa_name: "👤 Name",
+            wa_phone: "📱 Phone",
+            wa_type: "📁 Project Type",
+            wa_slides: "📊 Slides",
+            wa_design: "🎨 Design",
+            wa_pages: "📄 Pages",
+            wa_details: "📝 Details",
+            wa_time: "⏰ Time"
+          }
+        };
+
+        // ===== helpers =====
+        const $ = (s, r=document)=>r.querySelector(s);
+        const $$ = (s, r=document)=>Array.from(r.querySelectorAll(s));
         const stepsEls = document.querySelectorAll('.progress-step');
         const form = document.getElementById('projectForm');
         const projectTypeEl = document.getElementById('projectType');
@@ -350,11 +629,64 @@
         const messageContainer = document.getElementById('messageContainer');
         const requestIdEl = document.getElementById('requestId');
 
+        // ===== language state =====
+        function getLang(){ return localStorage.getItem('lang') || 'ar'; }
+        function setLang(lang){ localStorage.setItem('lang', lang); applyLang(lang); }
+
+        function applyLang(lang){
+          const d = T[lang];
+          // dir/lang/title
+          document.documentElement.lang = (lang==='ar'?'ar':'en');
+          document.documentElement.dir = (lang==='ar'?'rtl':'ltr');
+          document.title = d.page_title;
+
+          // innerHTML for labels with icons
+          $$('[data-i18n-html]').forEach(el=>{
+            const k = el.getAttribute('data-i18n-html');
+            if(d[k]) el.innerHTML = d[k];
+          });
+          // plain text
+          $$('[data-i18n]').forEach(el=>{
+            const k = el.getAttribute('data-i18n');
+            if(d[k]) el.textContent = d[k];
+          });
+          // placeholders
+          $$('[data-i18n-placeholder]').forEach(el=>{
+            const k = el.getAttribute('data-i18n-placeholder');
+            if(d[k]) el.placeholder = d[k];
+          });
+
+          // selects
+          fillSelect(projectTypeEl, d.project_type_options);
+          fillSelect(slidesSelect, d.slides_options);
+          fillSelect(presentationTypeSelect, d.design_options);
+          fillSelect(wordPagesSelect, d.word_pages_options);
+
+          // language button state
+          $$('.lang-btn').forEach(b=> b.classList.toggle('active', b.dataset.lang===lang));
+        }
+
+        function fillSelect(selectEl, items){
+          const currentVal = selectEl.value || "";
+          selectEl.innerHTML = '';
+          items.forEach(opt=>{
+            const o = document.createElement('option');
+            o.value = opt.value;
+            o.textContent = opt.text;
+            selectEl.appendChild(o);
+          });
+          const hasVal = Array.from(selectEl.options).some(o=>o.value===currentVal);
+          if(hasVal) selectEl.value = currentVal;
+        }
+
+        // ===== progress bar =====
+        let currentStep = 1;
         function updateProgress(step) {
             stepsEls.forEach((el, i) => el.classList.toggle('active', i < step));
         }
         updateProgress(currentStep);
 
+        // ===== messages =====
         function showMessage(type, html) {
             messageContainer.innerHTML = `
                 <div class="message-card message-${type}" id="messageCard">
@@ -365,6 +697,7 @@
             card.style.display = 'block';
         }
 
+        // ===== utils =====
         function generateRequestId() {
             const now = new Date();
             const pad = (n) => String(n).padStart(2, '0');
@@ -376,24 +709,26 @@
         }
 
         function sendToWhatsApp(data) {
-            let message = `🎓 طلب مشروع جديد من طلبات مسار\n\n`;
-            message += `📋 رقم الطلب: ${data.requestId}\n`;
-            message += `👤 الاسم: ${data.name}\n`;
-            message += `📱 الهاتف: ${data.phone}\n`;
-            message += `📁 نوع المشروع: ${data.projectType}\n`;
-            
-            if (data.slidesCount) message += `📊 عدد الشرائح: ${data.slidesCount}\n`;
-            if (data.presentationType) message += `🎨 مستوى التصميم: ${data.presentationType}\n`;
-            if (data.wordPages) message += `📄 عدد الصفحات: ${data.wordPages}\n`;
-            if (data.details) message += `\n📝 التفاصيل:\n${data.details}\n`;
-            message += `\n⏰ وقت الطلب: ${new Date().toLocaleString('ar-SA')}`;
+            const lang = getLang();
+            const d = T[lang];
+            const lines = [
+              d.wa_title, '',
+              `📋 ${d.your_request_id || 'ID'}: ${data.requestId}`,
+              `${d.wa_name}: ${data.name}`,
+              `${d.wa_phone}: ${data.phone}`,
+              `${d.wa_type}: ${data.projectType}`,
+              data.slidesCount ? `${d.wa_slides}: ${data.slidesCount}` : '',
+              data.presentationType ? `${d.wa_design}: ${data.presentationType}` : '',
+              data.wordPages ? `${d.wa_pages}: ${data.wordPages}` : '',
+              data.details ? `\n${d.wa_details}:\n${data.details}` : '',
+              `\n${d.wa_time}: ${new Date().toLocaleString(lang==='ar'?'ar-SA':'en-US')}`
+            ].filter(Boolean).join('\n');
 
-            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-            // فتح في نفس التبويب لضمان عدم حظر بعض المتصفحات
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines)}`;
             window.location.href = whatsappUrl;
         }
 
-        // تبديل الحقول حسب نوع المشروع
+        // ===== dynamic fields =====
         projectTypeEl.addEventListener('change', function () {
             [slidesGroup, presentationTypeGroup, wordPagesGroup].forEach((g) => g.classList.remove('show'));
             [slidesSelect, presentationTypeSelect, wordPagesSelect].forEach((s) => { 
@@ -454,7 +789,6 @@
         phoneEl.addEventListener('input', function (e) {
             let v = e.target.value.replace(/\D/g, ''); // أرقام فقط
             if (v.length > 10) v = v.slice(0, 10);
-            // فرض البدء بـ 05
             if (v.length >= 1 && v[0] !== '0') v = '0' + v;
             if (v.length >= 2 && v.slice(0,2) !== '05') v = '05' + v.slice(2);
             e.target.value = v;
@@ -467,20 +801,23 @@
         });
 
         function validateDynamicFields() {
+            const lang = getLang(); const d = T[lang];
             const type = projectTypeEl.value;
-            if (!type) return { ok: false, msg: 'فضلاً اختر نوع المشروع.' };
+            if (!type) return { ok: false, msg: d.msg_choose_type };
             if (type === 'بوربوينت') {
-                if (!slidesSelect.value) return { ok: false, msg: 'حدد عدد الشرائح لعرض البوربوينت.' };
-                if (!presentationTypeSelect.value) return { ok: false, msg: 'اختر مستوى التصميم (أساسي/احترافي).' };
+                if (!slidesSelect.value) return { ok: false, msg: d.msg_ppt_slides };
+                if (!presentationTypeSelect.value) return { ok: false, msg: d.msg_choose_design };
             }
             if (type === 'وورد') {
-                if (!wordPagesSelect.value) return { ok: false, msg: 'حدد عدد صفحات مستند الوورد.' };
+                if (!wordPagesSelect.value) return { ok: false, msg: d.msg_word_pages };
             }
             return { ok: true };
         }
 
+        // ===== submit =====
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+            const lang = getLang(); const d = T[lang];
             
             const dynamicCheck = validateDynamicFields();
             if (!dynamicCheck.ok) {
@@ -488,11 +825,11 @@
                 return;
             }
             if (!nameEl.value.trim()) { 
-                showMessage('error', 'اكتب اسمك الكامل.'); 
+                showMessage('error', d.msg_name); 
                 return; 
             }
             if (!/^05\d{8}$/.test(phoneEl.value)) { 
-                showMessage('error', 'رقم الجوال غير صحيح. يجب أن يكون 10 أرقام ويبدأ بـ 05.'); 
+                showMessage('error', d.msg_phone); 
                 return; 
             }
 
@@ -509,7 +846,7 @@
                 wordPages: wordPagesSelect.value || null,
                 name: nameEl.value.trim(),
                 phone: phoneEl.value.trim(),
-                details: detailsEl.value.trim() || 'لا توجد تفاصيل إضافية',
+                details: detailsEl.value.trim() || (lang==='ar' ? 'لا توجد تفاصيل إضافية' : 'No extra details'),
                 createdAt: new Date().toISOString()
             };
 
@@ -528,21 +865,21 @@
                 loadingOverlay.style.display = 'none';
 
                 if (response.ok) {
-                    // إظهار رسالة النجاح
+                    // رسالة النجاح
                     const idHtml = `
                         <div class="request-id-display">
-                            <div class="request-id-label">رقم طلبك</div>
+                            <div class="request-id-label">${d.your_request_id}</div>
                             <div class="request-id-number">${data.requestId}</div>
                         </div>`;
 
                     const whatsappButtonHtml = `
                         <button type="button" class="whatsapp-button" onclick="sendToWhatsApp(${JSON.stringify(data).replace(/"/g, '&quot;')})">
-                            <i class="fab fa-whatsapp"></i> إرسال إلى الواتساب أيضاً
+                            <i class="fab fa-whatsapp"></i> ${d.also_whatsapp}
                         </button>`;
 
-                    showMessage('success', `تم إرسال طلبك بنجاح إلى الإيميل ✅${idHtml}<div>سنقوم بالتواصل معك قريباً عبر الرقم: <b>${data.phone}</b></div>${whatsappButtonHtml}`);
+                    showMessage('success', `${d.success_sent_email}${idHtml}<div>${lang==='ar'?'سنقوم بالتواصل معك قريباً عبر الرقم:':'We will contact you soon at'} <b>${data.phone}</b></div>${whatsappButtonHtml}`);
 
-                    // إعادة تعيين النموذج
+                    // reset
                     form.reset();
                     [slidesGroup, presentationTypeGroup, wordPagesGroup].forEach((g) => g.classList.remove('show'));
                     [slidesSelect, presentationTypeSelect, wordPagesSelect].forEach((s) => { 
@@ -552,78 +889,20 @@
                     currentStep = 1; 
                     updateProgress(currentStep);
 
-                    // (اختياري) إرسال تلقائي للواتساب بعد 3 ثواني — قد يُحظر ببعض المتصفحات
-                    // setTimeout(() => { sendToWhatsApp(data); }, 3000);
-
                 } else {
-                    showMessage('error', 'حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.');
+                    showMessage('error', d.error_send);
                 }
             } catch (error) {
                 loadingOverlay.style.display = 'none';
-                showMessage('error', 'حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.');
+                showMessage('error', T[getLang()].error_network);
             }
         });
 
-    </script>
-
-    <!-- 🟣 قسم الأسئلة الشائعة -->
-    <section class="faq-section">
-      <h2 class="faq-title">الأسئلة الشائعة</h2>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span>⏰ كم يستغرق تسليم المشروع؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer">
-          عادة من 2 إلى 5 أيام حسب حجم المشروع ونوع الخدمة.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span>🔒 كيف أضمن جودة العمل؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer">
-          جميع المشاريع يتم مراجعتها بعناية مع إمكانية طلب تعديلات مجانية محدودة.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span>💳 ما طرق الدفع المتاحة؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer">
-           تحويل بنكي .
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span>⚡ هل يمكنني طلب مشروع مستعجل؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer">
-          نعم، يمكنك اختيار خيار "تسليم عاجل" برسوم إضافية.
-        </div>
-      </div>
-    </section>
-
-    <!-- سكربت الـ FAQ (سؤال واحد مفتوح في كل مرة) -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.faq-question').forEach(q => {
-          q.addEventListener('click', () => {
-            document.querySelectorAll('.faq-item').forEach(item => {
-              if (item !== q.parentElement) { item.classList.remove('active'); }
-            });
-            q.parentElement.classList.toggle('active');
-          });
+        // ===== init lang & selects =====
+        $$('.lang-btn').forEach(btn=>{
+          btn.addEventListener('click', ()=> setLang(btn.dataset.lang));
         });
-      });
+        applyLang(getLang());
     </script>
-
 </body>
 </html>
