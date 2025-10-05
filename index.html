@@ -1,908 +1,101 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="page_title">طلبات مسار - طلب مشروعك</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موقع مسار | صيانة مؤقتة</title>
+  <style>
+    body {
+      font-family: 'Cairo', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1E3C72, #2A5298);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    .loader {
+      margin-top: 2rem;
+      border: 6px solid rgba(255,255,255,0.2);
+      border-top: 6px solid white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
-        :root {
-            --primary-gradient: linear-gradient(135deg, #192464 0%, #1e2a78 25%, #0f1a4a 50%, #192464 75%, #2a3b8f 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --accent-blue: #4fc3f7;
-            --accent-purple: #ab47bc;
-            --success-color: #4caf50;
-            --error-color: #f44336;
-            --warning-color: #ff9800;
-            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.12);
-            --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.3);
-            --border-radius: 16px;
-        }
+    /* زر الواتساب */
+    .whatsapp {
+      margin-top: 2rem;
+      background: #25D366;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .whatsapp:hover {
+      background: #1EBE5B;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: var(--primary-gradient);
-            background-size: 400% 400%;
-            background-attachment: fixed;
-            animation: gradient-shift 20s ease infinite;
-            min-height: 100vh; padding: 20px; position: relative; overflow-x: hidden;
-        }
-        body::before { content: ''; position: fixed; inset: 0; z-index: -2;
-            background:
-                radial-gradient(circle at 20% 30%, rgba(79, 195, 247, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(171, 71, 188, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 90%, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
-            animation: float-orbs 25s ease-in-out infinite;
-        }
-        /* ✅ خلفية مموجة SVG متحركة */
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: 0; left: 0;
-            width: 100%; height: 300px;
-            z-index: -1;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.08' d='M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,245.3C672,267,768,277,864,272C960,267,1056,245,1152,229.3C1248,213,1344,203,1392,197.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-            background-size: cover;
-            background-repeat: no-repeat;
-            animation: wave-motion 12s ease-in-out infinite;
-        }
-
-        .container { max-width: 900px; margin: 0 auto; position: relative; }
-        .header { text-align: center; margin-bottom: 40px; padding: 40px 0; }
-
-        .logo-section { margin-bottom: 30px; }
-        .logo-icon { width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
-            box-shadow: var(--shadow-deep); animation: logo-pulse 3s ease-in-out infinite; }
-        .logo-icon i { font-size: 2.5rem; color: white; }
-
-        .main-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; color: var(--text-primary); margin-bottom: 15px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); background: linear-gradient(45deg, #fff, var(--accent-blue));
-            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { font-size: 1.2rem; color: var(--text-secondary); font-weight: 400; max-width: 600px; margin: 0 auto; line-height: 1.6; }
-
-        .form-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 24px; padding: 50px; box-shadow: var(--shadow-deep);
-            position: relative; overflow: hidden; }
-        .form-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); }
-
-        .progress-indicator { display: flex; justify-content: center; margin-bottom: 40px; gap: 15px; }
-        .progress-step { width: 40px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.2); transition: all 0.3s ease; }
-        .progress-step.active { background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); box-shadow: 0 0 10px rgba(79, 195, 247, 0.5); }
-
-        .form-section { margin-bottom: 35px; opacity: 0; transform: translateY(20px); animation: slide-up 0.6s ease forwards; }
-        .form-section:nth-child(1) { animation-delay: 0.1s; }
-        .form-section:nth-child(2) { animation-delay: 0.2s; }
-        .form-section:nth-child(3) { animation-delay: 0.3s; }
-        .form-section:nth-child(4) { animation-delay: 0.4s; }
-        .form-section:nth-child(5) { animation-delay: 0.5s; }
-
-        .form-label { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; font-size: 1.1rem; }
-        .form-label i { font-size: 1.2rem; color: var(--accent-blue); }
-        .required-star { color: #ff6b6b; font-weight: bold; margin-right: 5px; }
-
-        .input-wrapper { position: relative; margin-bottom: 8px; }
-        .form-input, .form-select, .form-textarea {
-            width: 100%; padding: 18px 24px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius); color: var(--text-primary); font-size: 1rem; font-family: inherit;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(10px);
-        }
-        .form-select option { background: transparent; color: #333; padding: 12px; font-size: 1rem; }
-        .form-select option:hover { background: rgba(0, 0, 0, 0.1); }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent-blue); background: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 4px rgba(79, 195, 247, 0.2); transform: translateY(-2px); }
-        .form-input::placeholder, .form-textarea::placeholder { color: rgba(255, 255, 255, 0.6); }
-        .form-textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
-
-        .dynamic-field { opacity: 0; max-height: 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 0; }
-        .dynamic-field.show { opacity: 1; max-height: 200px; margin-top: 25px; }
-
-        .field-hint { font-size: 0.9rem; color: var(--text-secondary); margin-top: 8px; display: flex; align-items: center; gap: 6px; }
-        .field-hint i { font-size: 0.8rem; color: var(--accent-blue); }
-
-        .premium-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: linear-gradient(135deg, #ffd700, #ffb300); color: #333; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; }
-
-        .submit-section { margin-top: 50px; text-align: center; }
-        .submit-button {
-            background: linear-gradient(135deg, var(--success-color) 0%, #66bb6a 100%); color: white; border: none; padding: 20px 60px;
-            font-size: 1.2rem; font-weight: 700; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; overflow: hidden; text-transform: uppercase; letter-spacing: 1px; box-shadow: var(--shadow-soft); min-width: 250px;
-        }
-        .submit-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s; }
-        .submit-button:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4); }
-        .submit-button:hover::before { left: 100%; }
-        .submit-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: var(--shadow-soft); }
-
-        .loading-overlay { position: fixed; inset: 0; background: rgba(25, 36, 100, 0.9); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .loading-content { text-align: center; color: white; }
-        .spinner { width: 60px; height: 60px; border: 4px solid rgba(255, 255, 255, 0.3); border-top: 4px solid var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
-        .loading-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
-        .loading-progress { width: 200px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; overflow: hidden; margin: 0 auto; }
-        .loading-bar { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); width: 0%; animation: loading-progress 3s ease-in-out; }
-
-        .message-card { margin-bottom: 30px; padding: 25px; border-radius: var(--border-radius); backdrop-filter: blur(10px); border: 1px solid; display: none; animation: message-slide 0.5s ease; }
-        .message-success { background: rgba(76, 175, 80, 0.15); border-color: var(--success-color); color: #e8f5e8; }
-        .message-error { background: rgba(244, 67, 54, 0.15); border-color: var(--error-color); color: #ffebee; }
-        .message-icon { font-size: 1.5rem; margin-left: 15px; float: right; }
-
-        .request-id-display { background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 193, 7, 0.1)); border: 2px solid rgba(255, 215, 0, 0.3); border-radius: var(--border-radius); padding: 20px; margin: 20px 0; text-align: center; }
-        .request-id-label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; }
-        .request-id-number { font-size: 1.8rem; font-weight: 900; color: #ffd700; font-family: 'Courier New', monospace; letter-spacing: 2px; }
-
-        .whatsapp-button { 
-            background: linear-gradient(135deg, #25d366, #128c7e); color: white; border: none; padding: 15px 30px;
-            font-size: 1rem; font-weight: 600; border-radius: var(--border-radius); cursor: pointer; 
-            margin-top: 15px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px;
-        }
-        .whatsapp-button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); }
-
-        @keyframes gradient-shift { 0%, 100% { background-position: 0% 50%; } 25% { background-position: 100% 50%; } 50% { background-position: 50% 100%; } 75% { background-position: 0% 100%; } }
-        @keyframes float-orbs { 0%, 100% { transform: translate(0px, 0px) rotate(0deg); } 33% { transform: translate(30px, -30px) rotate(120deg); } 66% { transform: translate(-20px, 20px) rotate(240deg); } }
-        @keyframes wave-motion { 0%, 100% { transform: translateX(0px) scale(1); } 50% { transform: translateX(50px) scale(1.05); } }
-        @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes slide-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes loading-progress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
-        @keyframes message-slide { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .form-card { padding: 30px 20px; }
-            .main-title { font-size: 2.5rem; }
-            .submit-button { padding: 16px 40px; font-size: 1.1rem; }
-        }
-        @media (max-width: 480px) {
-            .form-card { padding: 25px 15px; }
-            .main-title { font-size: 2rem; }
-            .submit-button { width: 100%; }
-        }
-
-        /* FAQ Styles */
-        .faq-section {
-          margin: 60px auto;
-          padding: 30px;
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid var(--glass-border);
-          border-radius: var(--border-radius);
-          backdrop-filter: blur(12px);
-        }
-        .faq-title {
-          text-align: center;
-          font-size: 2rem;
-          font-weight: 700;
-          margin-bottom: 25px;
-          color: var(--text-primary);
-        }
-        .faq-item { border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
-        .faq-question {
-          padding: 15px;
-          cursor: pointer;
-          font-weight: 600;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          color: var(--text-primary);
-        }
-        .faq-answer {
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.3s ease, padding 0.3s ease;
-          padding: 0 15px;
-          color: var(--text-secondary);
-        }
-        .faq-item.active .faq-answer { max-height: 200px; padding: 15px; }
-        .faq-icon { transition: transform 0.3s ease; }
-        .faq-item.active .faq-icon { transform: rotate(180deg); }
-
-        /* Language switch */
-        .lang-switch {
-          position: fixed; top: 12px; right: 12px; z-index: 1001;
-          display: flex; gap: 8px;
-        }
-        .lang-btn {
-          padding: 6px 12px; border: 1px solid var(--glass-border);
-          background: rgba(255,255,255,0.08); color: #fff;
-          border-radius: 10px; cursor: pointer; font-weight: 700;
-          backdrop-filter: blur(10px);
-        }
-        .lang-btn.active { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); }
-    </style>
+    /* الموجات */
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 200%;
+      height: 200px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1000% 1000% 0 0;
+      animation: wave 8s linear infinite;
+      transform: translateX(-25%);
+    }
+    .wave:nth-of-type(2) {
+      bottom: 10px;
+      animation: wave 10s linear infinite;
+      opacity: 0.5;
+    }
+    .wave:nth-of-type(3) {
+      bottom: 20px;
+      animation: wave 12s linear infinite;
+      opacity: 0.3;
+    }
+    @keyframes wave {
+      0% { transform: translateX(-25%); }
+      50% { transform: translateX(0%); }
+      100% { transform: translateX(-25%); }
+    }
+  </style>
 </head>
 <body>
-    <!-- أزرار اللغة -->
-    <div class="lang-switch" aria-label="Language switch">
-      <button class="lang-btn active" data-lang="ar">العربية</button>
-      <button class="lang-btn" data-lang="en">English</button>
-    </div>
-
-    <div class="container">
-        <div class="header">
-            <div class="logo-section">
-                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
-                <h1 class="main-title" data-i18n="site_title">طلبات مسار</h1>
-                <p class="subtitle" data-i18n="site_subtitle">خدمات أكاديمية احترافية مع ضمان الجودة والسرعة في التسليم</p>
-            </div>
-        </div>
-
-        <div class="form-card">
-            <div class="progress-indicator">
-                <div class="progress-step active"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-            </div>
-
-            <div id="messageContainer"></div>
-
-            <form id="projectForm" action="https://formspree.io/f/myzngjkp" method="POST" novalidate>
-                <!-- نوع المشروع -->
-                <div class="form-section">
-                    <label class="form-label" data-i18n-html="label_project_type">
-                      <i class="fas fa-folder-open"></i> نوع المشروع <span class="required-star">*</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="projectType" name="project_type" class="form-select" required></select>
-                    </div>
-                    <div class="field-hint" data-i18n-html="hint_project_type">
-                      <i class="fas fa-info-circle"></i> اختر النوع الذي يناسب مشروعك الأكاديمي
-                    </div>
-                </div>
-
-                <!-- عدد الشرائح لبوربوينت -->
-                <div class="form-section dynamic-field" id="slidesGroup">
-                    <label class="form-label" data-i18n-html="label_slides">
-                      <i class="fas fa-chart-bar"></i> عدد الشرائح <span class="required-star">*</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="slidesCount" name="slides_count" class="form-select"></select>
-                    </div>
-                </div>
-
-                <!-- مستوى التصميم بعد اختيار عدد الشرائح -->
-                <div class="form-section dynamic-field" id="presentationTypeGroup">
-                    <label class="form-label" data-i18n-html="label_design">
-                      <i class="fas fa-star"></i> مستوى التصميم <span class="required-star">*</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="presentationType" name="presentation_type" class="form-select"></select>
-                    </div>
-                    <div class="field-hint" data-i18n-html="hint_design">
-                      <i class="fas fa-palette"></i> التصميم الاحترافي يشمل رسوم بيانية متقدمة وتأثيرات بصرية
-                    </div>
-                </div>
-
-                <!-- عدد صفحات الوورد -->
-                <div class="form-section dynamic-field" id="wordPagesGroup">
-                    <label class="form-label" data-i18n-html="label_word_pages">
-                      <i class="fas fa-file-word"></i> عدد الصفحات <span class="required-star">*</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <select id="wordPages" name="word_pages" class="form-select"></select>
-                    </div>
-                </div>
-
-                <!-- الاسم -->
-                <div class="form-section">
-                    <label class="form-label" data-i18n-html="label_name">
-                      <i class="fas fa-user"></i> الاسم الكامل <span class="required-star">*</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="text" id="name" name="name" class="form-input" placeholder="أدخل اسمك الكامل" data-i18n-placeholder="ph_name" required />
-                    </div>
-                </div>
-
-                <!-- الهاتف -->
-                <div class="form-section">
-                    <label class="form-label" data-i18n-html="label_phone">
-                      <i class="fas fa-mobile-alt"></i> رقم التواصل <span class="required-star">*</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="05xxxxxxxx" data-i18n-placeholder="ph_phone" inputmode="numeric" pattern="05\d{8}" required />
-                    </div>
-                    <div class="field-hint" data-i18n-html="hint_phone">
-                      <i class="fas fa-shield-alt"></i> رقمك محمي ولن يستخدم إلا للتواصل بخصوص المشروع
-                    </div>
-                </div>
-
-                <!-- التفاصيل -->
-                <div class="form-section">
-                    <label class="form-label" data-i18n-html="label_details">
-                      <i class="fas fa-clipboard-list"></i> تفاصيل الطلب
-                    </label>
-                    <div class="input-wrapper">
-                        <textarea id="details" name="details" class="form-textarea" data-i18n-placeholder="ph_details" placeholder=" تفاصيل المشروع مثل:&#10;- الموضوع المطلوب&#10;- عدد الصفحات أو الشرائح&#10;- تاريخ التسليم المطلوب&#10;- أي متطلبات خاص"></textarea>
-                    </div>
-                    <div class="field-hint" data-i18n-html="hint_details">
-                      <i class="fas fa-lightbulb"></i> التفاصيل الواضحة تساعدنا في تقديم أفضل خدمة
-                    </div>
-                </div>
-
-                <!-- حقول مخفية لـ Formspree -->
-                <input type="hidden" id="requestId" name="request_id" />
-                <input type="hidden" name="_subject" value="طلب مشروع جديد - طلبات مسار" />
-                <input type="hidden" name="_format" value="plain" />
-                
-                <div class="submit-section">
-                    <button type="submit" class="submit-button" id="submitBtn" data-i18n-html="btn_submit">
-                        <i class="fas fa-rocket" style="margin-left:10px"></i> إرسال الطلب
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-content">
-            <div class="spinner"></div>
-            <div class="loading-text" data-i18n="loading_text">جاري معالجة طلبك...</div>
-            <div class="loading-progress"><div class="loading-bar"></div></div>
-        </div>
-    </div>
-
-    <!-- 🟣 قسم الأسئلة الشائعة -->
-    <section class="faq-section">
-      <h2 class="faq-title" data-i18n="faq_title">الأسئلة الشائعة</h2>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span data-i18n="faq_q1">⏰ كم يستغرق تسليم المشروع؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer" data-i18n="faq_a1">
-          عادة من 2 إلى 5 أيام حسب حجم المشروع ونوع الخدمة.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span data-i18n="faq_q2">🔒 كيف أضمن جودة العمل؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer" data-i18n="faq_a2">
-          جميع المشاريع يتم مراجعتها بعناية مع إمكانية طلب تعديلات مجانية محدودة.
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span data-i18n="faq_q3">💳 ما طرق الدفع المتاحة؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer" data-i18n="faq_a3">
-           تحويل بنكي .
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-question">
-          <span data-i18n="faq_q4">⚡ هل يمكنني طلب مشروع مستعجل؟</span>
-          <i class="fas fa-chevron-down faq-icon"></i>
-        </div>
-        <div class="faq-answer" data-i18n="faq_a4">
-          نعم، يمكنك اختيار خيار "تسليم عاجل" برسوم إضافية.
-        </div>
-      </div>
-    </section>
-
-    <!-- سكربت الـ FAQ -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.faq-question').forEach(q => {
-          q.addEventListener('click', () => {
-            document.querySelectorAll('.faq-item').forEach(item => {
-              if (item !== q.parentElement) { item.classList.remove('active'); }
-            });
-            q.parentElement.classList.toggle('active');
-          });
-        });
-      });
-    </script>
-
-    <!-- سكربت الترجمة + النموذج + واتساب -->
-    <script>
-        // ===== WhatsApp =====
-        const WHATSAPP_NUMBER = '966504600487'; // بدون +
-
-        // ===== i18n dict =====
-        const T = {
-          ar: {
-            page_title: "طلبات مسار - طلب مشروعك",
-            site_title: "طلبات مسار",
-            site_subtitle: "خدمات أكاديمية احترافية مع ضمان الجودة والسرعة في التسليم",
-
-            label_project_type: "<i class='fas fa-folder-open'></i> نوع المشروع <span class='required-star'>*</span>",
-            hint_project_type: "<i class='fas fa-info-circle'></i> اختر النوع الذي يناسب مشروعك الأكاديمي",
-
-            label_slides: "<i class='fas fa-chart-bar'></i> عدد الشرائح <span class='required-star'>*</span>",
-            label_design: "<i class='fas fa-star'></i> مستوى التصميم <span class='required-star'>*</span>",
-            hint_design: "<i class='fas fa-palette'></i> التصميم الاحترافي يشمل رسوم بيانية متقدمة وتأثيرات بصرية",
-
-            label_word_pages: "<i class='fas fa-file-word'></i> عدد الصفحات <span class='required-star'>*</span>",
-
-            label_name: "<i class='fas fa-user'></i> الاسم الكامل <span class='required-star'>*</span>",
-            label_phone: "<i class='fas fa-mobile-alt'></i> رقم التواصل <span class='required-star'>*</span>",
-            label_details: "<i class='fas fa-clipboard-list'></i> تفاصيل الطلب",
-
-            hint_phone: "<i class='fas fa-shield-alt'></i> رقمك محمي ولن يستخدم إلا للتواصل بخصوص المشروع",
-            hint_details: "<i class='fas fa-lightbulb'></i> التفاصيل الواضحة تساعدنا في تقديم أفضل خدمة",
-
-            ph_name: "أدخل اسمك الكامل",
-            ph_phone: "05xxxxxxxx",
-            ph_details: " تفاصيل المشروع مثل:\n- الموضوع المطلوب\n- عدد الصفحات أو الشرائح\n- تاريخ التسليم المطلوب\n- أي متطلبات خاص",
-
-            btn_submit: "<i class='fas fa-rocket' style='margin-left:10px'></i> إرسال الطلب",
-            loading_text: "جاري معالجة طلبك...",
-
-            faq_title: "الأسئلة الشائعة",
-            faq_q1: "⏰ كم يستغرق تسليم المشروع؟",
-            faq_a1: "عادة من 2 إلى 5 أيام حسب حجم المشروع ونوع الخدمة.",
-            faq_q2: "🔒 كيف أضمن جودة العمل؟",
-            faq_a2: "جميع المشاريع يتم مراجعتها بعناية مع إمكانية طلب تعديلات مجانية محدودة.",
-            faq_q3: "💳 ما طرق الدفع المتاحة؟",
-            faq_a3: "تحويل بنكي .",
-            faq_q4: "⚡ هل يمكنني طلب مشروع مستعجل؟",
-            faq_a4: "نعم، يمكنك اختيار خيار \"تسليم عاجل\" برسوم إضافية.",
-
-            // Options
-            project_type_options: [
-              { value:"", text:"اختر نوع المشروع المطلوب" },
-              { value:"واجب", text:"📝 واجب أكاديمي" },
-              { value:"بحث", text:"🔍 بحث علمي" },
-              { value:"سيسكو", text:"🌐 سيسكو" },
-              { value:"بوربوينت", text:"📊 عرض بوربوينت" },
-              { value:"وورد", text:"📄 مستند وورد" },
-              { value:"خرائط مفاهيم", text:"📜خرائط مفاهيم" },
-              { value:"ترجمة ملفات", text:"💫ترجمة ملفات" },
-              { value:"cv ", text:"🗞️ cv " },
-              { value:"طلب اخر", text:"طلب اخر " }
-            ],
-            slides_options: [
-              {value:"", text:"حدد عدد الشرائح المطلوبة"},
-              {value:"5-10", text:"5-10 شرائح"},
-              {value:"11-15", text:"11-15 شريحة"},
-              {value:"16-20", text:"16-20 شريحة"},
-              {value:"21-30", text:"21-30 شريحة"},
-              {value:"أكثر من 30", text:"أكثر من 30 شريحة"},
-              {value:"حسب المحتوى", text:"حسب المحتوى المطلوب"},
-            ],
-            design_options: [
-              {value:"", text:"اختر مستوى التصميم"},
-              {value:"أساسي", text:"🟢 أساسي - تصميم بسيط وواضح"},
-              {value:"احترافي", text:"⭐ احترافي - تصميم متقدم ومتطور"},
-            ],
-            word_pages_options: [
-              {value:"", text:"حدد عدد الصفحات المطلوبة"},
-              {value:"1-5", text:"1-5 صفحات"},
-              {value:"6-10", text:"6-10 صفحات"},
-              {value:"11-20", text:"11-20 صفحة"},
-              {value:"21-30", text:"21-30 صفحة"},
-              {value:"أكثر من 30", text:"أكثر من 30 صفحة"},
-              {value:"حسب المحتوى", text:"حسب المحتوى المطلوب"},
-            ],
-
-            // Messages
-            msg_choose_type: "فضلاً اختر نوع المشروع.",
-            msg_ppt_slides: "حدد عدد الشرائح لعرض البوربوينت.",
-            msg_choose_design: "اختر مستوى التصميم (أساسي/احترافي).",
-            msg_word_pages: "حدد عدد صفحات مستند الوورد.",
-            msg_name: "اكتب اسمك الكامل.",
-            msg_phone: "رقم الجوال غير صحيح. يجب أن يكون 10 أرقام ويبدأ بـ 05.",
-            success_sent_email: "تم إرسال طلبك بنجاح إلى الإيميل ✅",
-            your_request_id: "رقم طلبك",
-            also_whatsapp: "إرسال إلى الواتساب أيضاً",
-            error_send: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.",
-            error_network: "حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.",
-
-            // WhatsApp
-            wa_title: "🎓 طلب مشروع جديد من طلبات مسار",
-            wa_name: "👤 الاسم",
-            wa_phone: "📱 الهاتف",
-            wa_type: "📁 نوع المشروع",
-            wa_slides: "📊 عدد الشرائح",
-            wa_design: "🎨 مستوى التصميم",
-            wa_pages: "📄 عدد الصفحات",
-            wa_details: "📝 التفاصيل",
-            wa_time: "⏰ وقت الطلب"
-          },
-          en: {
-            page_title: "Masar Orders - Request Your Project",
-            site_title: "Masar Orders",
-            site_subtitle: "Professional academic services with guaranteed quality and fast delivery",
-
-            label_project_type: "<i class='fas fa-folder-open'></i> Project Type <span class='required-star'>*</span>",
-            hint_project_type: "<i class='fas fa-info-circle'></i> Choose the type that fits your academic project",
-
-            label_slides: "<i class='fas fa-chart-bar'></i> Slides Count <span class='required-star'>*</span>",
-            label_design: "<i class='fas fa-star'></i> Design Level <span class='required-star'>*</span>",
-            hint_design: "<i class='fas fa-palette'></i> Pro design includes advanced charts and visual effects",
-
-            label_word_pages: "<i class='fas fa-file-word'></i> Pages <span class='required-star'>*</span>",
-
-            label_name: "<i class='fas fa-user'></i> Full Name <span class='required-star'>*</span>",
-            label_phone: "<i class='fas fa-mobile-alt'></i> Phone Number <span class='required-star'>*</span>",
-            label_details: "<i class='fas fa-clipboard-list'></i> Order Details",
-
-            hint_phone: "<i class='fas fa-shield-alt'></i> Your number is private and used only for this order",
-            hint_details: "<i class='fas fa-lightbulb'></i> Clear details help us deliver the best service",
-
-            ph_name: "Enter your full name",
-            ph_phone: "05xxxxxxxx",
-            ph_details: " Project details, e.g.:\n- Topic\n- Pages or slides\n- Due date\n- Special requirements",
-
-            btn_submit: "<i class='fas fa-rocket' style='margin-left:10px'></i> Send Request",
-            loading_text: "Processing your request...",
-
-            faq_title: "FAQ",
-            faq_q1: "⏰ How long does delivery take?",
-            faq_a1: "Usually 2 to 5 days depending on the project size and service type.",
-            faq_q2: "🔒 How do I ensure quality?",
-            faq_a2: "All projects are carefully reviewed with limited free revisions.",
-            faq_q3: "💳 What payment methods are available?",
-            faq_a3: "Bank transfer for now.",
-            faq_q4: "⚡ Can I request an urgent order?",
-            faq_a4: "Yes, an urgent option is available for an extra fee.",
-
-            project_type_options: [
-              { value:"", text:"Select a project type" },
-              { value:"واجب", text:"📝 Academic Assignment" },
-              { value:"بحث", text:"🔍 Research Paper" },
-              { value:"سيسكو", text:"🌐 Cisco" },
-              { value:"بوربوينت", text:"📊 PowerPoint" },
-              { value:"وورد", text:"📄 Word Document" },
-              { value:"خرائط مفاهيم", text:"📜 Mind Map" },
-              { value:"ترجمة ملفات", text:"💫 File Translation" },
-              { value:"cv ", text:"🗞️ CV" },
-              { value:"طلب اخر", text:"Other" }
-            ],
-            slides_options: [
-              {value:"", text:"Select number of slides"},
-              {value:"5-10", text:"5-10 slides"},
-              {value:"11-15", text:"11-15 slides"},
-              {value:"16-20", text:"16-20 slides"},
-              {value:"21-30", text:"21-30 slides"},
-              {value:"أكثر من 30", text:"More than 30"},
-              {value:"حسب المحتوى", text:"Depends on content"},
-            ],
-            design_options: [
-              {value:"", text:"Select design level"},
-              {value:"أساسي", text:"🟢 Basic — Simple"},
-              {value:"احترافي", text:"⭐ Pro — Advanced"},
-            ],
-            word_pages_options: [
-              {value:"", text:"Select number of pages"},
-              {value:"1-5", text:"1-5 pages"},
-              {value:"6-10", text:"6-10 pages"},
-              {value:"11-20", text:"11-20 pages"},
-              {value:"21-30", text:"21-30 pages"},
-              {value:"أكثر من 30", text:"More than 30"},
-              {value:"حسب المحتوى", text:"Depends on content"},
-            ],
-
-            msg_choose_type: "Please choose a project type.",
-            msg_ppt_slides: "Select the number of slides for PowerPoint.",
-            msg_choose_design: "Choose a design level (Basic/Pro).",
-            msg_word_pages: "Select the number of pages for Word.",
-            msg_name: "Please enter your full name.",
-            msg_phone: "Invalid phone. Must be 10 digits starting with 05.",
-            success_sent_email: "Your order has been sent to email ✅",
-            your_request_id: "Your Request ID",
-            also_whatsapp: "Send to WhatsApp too",
-            error_send: "An error occurred while sending. Please try again or contact us directly.",
-            error_network: "Network error. Check your connection and try again.",
-
-            wa_title: "🎓 New order from Masar Orders",
-            wa_name: "👤 Name",
-            wa_phone: "📱 Phone",
-            wa_type: "📁 Project Type",
-            wa_slides: "📊 Slides",
-            wa_design: "🎨 Design",
-            wa_pages: "📄 Pages",
-            wa_details: "📝 Details",
-            wa_time: "⏰ Time"
-          }
-        };
-
-        // ===== helpers =====
-        const $ = (s, r=document)=>r.querySelector(s);
-        const $$ = (s, r=document)=>Array.from(r.querySelectorAll(s));
-        const stepsEls = document.querySelectorAll('.progress-step');
-        const form = document.getElementById('projectForm');
-        const projectTypeEl = document.getElementById('projectType');
-        const slidesGroup = document.getElementById('slidesGroup');
-        const presentationTypeGroup = document.getElementById('presentationTypeGroup');
-        const wordPagesGroup = document.getElementById('wordPagesGroup');
-        const slidesSelect = document.getElementById('slidesCount');
-        const presentationTypeSelect = document.getElementById('presentationType');
-        const wordPagesSelect = document.getElementById('wordPages');
-        const nameEl = document.getElementById('name');
-        const phoneEl = document.getElementById('phone');
-        const detailsEl = document.getElementById('details');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const messageContainer = document.getElementById('messageContainer');
-        const requestIdEl = document.getElementById('requestId');
-
-        // ===== language state =====
-        function getLang(){ return localStorage.getItem('lang') || 'ar'; }
-        function setLang(lang){ localStorage.setItem('lang', lang); applyLang(lang); }
-
-        function applyLang(lang){
-          const d = T[lang];
-          // dir/lang/title
-          document.documentElement.lang = (lang==='ar'?'ar':'en');
-          document.documentElement.dir = (lang==='ar'?'rtl':'ltr');
-          document.title = d.page_title;
-
-          // innerHTML for labels with icons
-          $$('[data-i18n-html]').forEach(el=>{
-            const k = el.getAttribute('data-i18n-html');
-            if(d[k]) el.innerHTML = d[k];
-          });
-          // plain text
-          $$('[data-i18n]').forEach(el=>{
-            const k = el.getAttribute('data-i18n');
-            if(d[k]) el.textContent = d[k];
-          });
-          // placeholders
-          $$('[data-i18n-placeholder]').forEach(el=>{
-            const k = el.getAttribute('data-i18n-placeholder');
-            if(d[k]) el.placeholder = d[k];
-          });
-
-          // selects
-          fillSelect(projectTypeEl, d.project_type_options);
-          fillSelect(slidesSelect, d.slides_options);
-          fillSelect(presentationTypeSelect, d.design_options);
-          fillSelect(wordPagesSelect, d.word_pages_options);
-
-          // language button state
-          $$('.lang-btn').forEach(b=> b.classList.toggle('active', b.dataset.lang===lang));
-        }
-
-        function fillSelect(selectEl, items){
-          const currentVal = selectEl.value || "";
-          selectEl.innerHTML = '';
-          items.forEach(opt=>{
-            const o = document.createElement('option');
-            o.value = opt.value;
-            o.textContent = opt.text;
-            selectEl.appendChild(o);
-          });
-          const hasVal = Array.from(selectEl.options).some(o=>o.value===currentVal);
-          if(hasVal) selectEl.value = currentVal;
-        }
-
-        // ===== progress bar =====
-        let currentStep = 1;
-        function updateProgress(step) {
-            stepsEls.forEach((el, i) => el.classList.toggle('active', i < step));
-        }
-        updateProgress(currentStep);
-
-        // ===== messages =====
-        function showMessage(type, html) {
-            messageContainer.innerHTML = `
-                <div class="message-card message-${type}" id="messageCard">
-                    <span class="message-icon">${type === 'success' ? '✅' : '⚠️'}</span>
-                    <div>${html}</div>
-                </div>`;
-            const card = document.getElementById('messageCard');
-            card.style.display = 'block';
-        }
-
-        // ===== utils =====
-        function generateRequestId() {
-            const now = new Date();
-            const pad = (n) => String(n).padStart(2, '0');
-            const y = now.getFullYear();
-            const m = pad(now.getMonth() + 1);
-            const d = pad(now.getDate());
-            const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
-            return `REQ-${y}${m}${d}-${rand}`;
-        }
-
-        function sendToWhatsApp(data) {
-            const lang = getLang();
-            const d = T[lang];
-            const lines = [
-              d.wa_title, '',
-              `📋 ${d.your_request_id || 'ID'}: ${data.requestId}`,
-              `${d.wa_name}: ${data.name}`,
-              `${d.wa_phone}: ${data.phone}`,
-              `${d.wa_type}: ${data.projectType}`,
-              data.slidesCount ? `${d.wa_slides}: ${data.slidesCount}` : '',
-              data.presentationType ? `${d.wa_design}: ${data.presentationType}` : '',
-              data.wordPages ? `${d.wa_pages}: ${data.wordPages}` : '',
-              data.details ? `\n${d.wa_details}:\n${data.details}` : '',
-              `\n${d.wa_time}: ${new Date().toLocaleString(lang==='ar'?'ar-SA':'en-US')}`
-            ].filter(Boolean).join('\n');
-
-            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines)}`;
-            window.location.href = whatsappUrl;
-        }
-
-        // ===== dynamic fields =====
-        projectTypeEl.addEventListener('change', function () {
-            [slidesGroup, presentationTypeGroup, wordPagesGroup].forEach((g) => g.classList.remove('show'));
-            [slidesSelect, presentationTypeSelect, wordPagesSelect].forEach((s) => { 
-                s.removeAttribute('required'); 
-                s.value = ''; 
-            });
-
-            currentStep = 2; 
-            updateProgress(currentStep);
-
-            setTimeout(() => {
-                if (this.value === 'بوربوينت') {
-                    slidesGroup.classList.add('show');
-                    slidesSelect.setAttribute('required', 'required');
-                } else if (this.value === 'وورد') {
-                    wordPagesGroup.classList.add('show');
-                    wordPagesSelect.setAttribute('required', 'required');
-                } else if (this.value) {
-                    currentStep = 3; 
-                    updateProgress(currentStep);
-                }
-            }, 100);
-        });
-
-        slidesSelect.addEventListener('change', function () {
-            if (this.value && projectTypeEl.value === 'بوربوينت') {
-                setTimeout(() => {
-                    presentationTypeGroup.classList.add('show');
-                    presentationTypeSelect.setAttribute('required', 'required');
-                }, 100);
-                currentStep = 3; 
-                updateProgress(currentStep);
-            }
-        });
-
-        presentationTypeSelect.addEventListener('change', function () {
-            if (this.value) { 
-                currentStep = 4; 
-                updateProgress(currentStep); 
-            }
-        });
-
-        wordPagesSelect.addEventListener('change', function () {
-            if (this.value) { 
-                currentStep = 3; 
-                updateProgress(currentStep); 
-            }
-        });
-
-        nameEl.addEventListener('input', function () {
-            if (this.value.trim().length > 2) { 
-                currentStep = Math.max(currentStep, 4); 
-                updateProgress(currentStep); 
-            }
-        });
-
-        // تنسيق رقم الجوال السعودي والتحقق
-        phoneEl.addEventListener('input', function (e) {
-            let v = e.target.value.replace(/\D/g, ''); // أرقام فقط
-            if (v.length > 10) v = v.slice(0, 10);
-            if (v.length >= 1 && v[0] !== '0') v = '0' + v;
-            if (v.length >= 2 && v.slice(0,2) !== '05') v = '05' + v.slice(2);
-            e.target.value = v;
-
-            const valid = /^05\d{8}$/.test(v);
-            if (valid) { 
-                currentStep = 5; 
-                updateProgress(currentStep); 
-            }
-        });
-
-        function validateDynamicFields() {
-            const lang = getLang(); const d = T[lang];
-            const type = projectTypeEl.value;
-            if (!type) return { ok: false, msg: d.msg_choose_type };
-            if (type === 'بوربوينت') {
-                if (!slidesSelect.value) return { ok: false, msg: d.msg_ppt_slides };
-                if (!presentationTypeSelect.value) return { ok: false, msg: d.msg_choose_design };
-            }
-            if (type === 'وورد') {
-                if (!wordPagesSelect.value) return { ok: false, msg: d.msg_word_pages };
-            }
-            return { ok: true };
-        }
-
-        // ===== submit =====
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const lang = getLang(); const d = T[lang];
-            
-            const dynamicCheck = validateDynamicFields();
-            if (!dynamicCheck.ok) {
-                showMessage('error', dynamicCheck.msg);
-                return;
-            }
-            if (!nameEl.value.trim()) { 
-                showMessage('error', d.msg_name); 
-                return; 
-            }
-            if (!/^05\d{8}$/.test(phoneEl.value)) { 
-                showMessage('error', d.msg_phone); 
-                return; 
-            }
-
-            // إنشاء رقم الطلب
-            const requestId = generateRequestId();
-            requestIdEl.value = requestId;
-
-            // جمع البيانات
-            const data = {
-                requestId: requestId,
-                projectType: projectTypeEl.value,
-                slidesCount: slidesSelect.value || null,
-                presentationType: presentationTypeSelect.value || null,
-                wordPages: wordPagesSelect.value || null,
-                name: nameEl.value.trim(),
-                phone: phoneEl.value.trim(),
-                details: detailsEl.value.trim() || (lang==='ar' ? 'لا توجد تفاصيل إضافية' : 'No extra details'),
-                createdAt: new Date().toISOString()
-            };
-
-            // شاشة التحميل
-            loadingOverlay.style.display = 'flex';
-
-            try {
-                // إرسال إلى Formspree
-                const formData = new FormData(form);
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
-
-                loadingOverlay.style.display = 'none';
-
-                if (response.ok) {
-                    // رسالة النجاح
-                    const idHtml = `
-                        <div class="request-id-display">
-                            <div class="request-id-label">${d.your_request_id}</div>
-                            <div class="request-id-number">${data.requestId}</div>
-                        </div>`;
-
-                    const whatsappButtonHtml = `
-                        <button type="button" class="whatsapp-button" onclick="sendToWhatsApp(${JSON.stringify(data).replace(/"/g, '&quot;')})">
-                            <i class="fab fa-whatsapp"></i> ${d.also_whatsapp}
-                        </button>`;
-
-                    showMessage('success', `${d.success_sent_email}${idHtml}<div>${lang==='ar'?'سنقوم بالتواصل معك قريباً عبر الرقم:':'We will contact you soon at'} <b>${data.phone}</b></div>${whatsappButtonHtml}`);
-
-                    // reset
-                    form.reset();
-                    [slidesGroup, presentationTypeGroup, wordPagesGroup].forEach((g) => g.classList.remove('show'));
-                    [slidesSelect, presentationTypeSelect, wordPagesSelect].forEach((s) => { 
-                        s.removeAttribute('required'); 
-                        s.value = ''; 
-                    });
-                    currentStep = 1; 
-                    updateProgress(currentStep);
-
-                } else {
-                    showMessage('error', d.error_send);
-                }
-            } catch (error) {
-                loadingOverlay.style.display = 'none';
-                showMessage('error', T[getLang()].error_network);
-            }
-        });
-
-        // ===== init lang & selects =====
-        $$('.lang-btn').forEach(btn=>{
-          btn.addEventListener('click', ()=> setLang(btn.dataset.lang));
-        });
-        applyLang(getLang());
-    </script>
+  <h1>🚧 الموقع تحت الصيانة🚧</h1>
+  <p>نعود لكم قريبًا بإذن الله ✨</p>
+  <div class="loader"></div>
+
+  <!-- رابط واتساب للتواصل -->
+  <a href="https://wa.me/966504600487" target="_blank" class="whatsapp">تواصل معنا عبر الواتساب</a>
+
+  <!-- أمواج -->
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
 </body>
 </html>
